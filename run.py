@@ -83,11 +83,12 @@ class S(BaseHTTPRequestHandler):
           logging.info('Caching Rclone Path: ' + filepath)
           p = os.popen('rclone rc --rc-addr=' + parser_args.rc + '  cache/fetch chunks=: file="' + filepath + '"')
           logging.info(p.read())
+
     self.wfile.write('POST request for {}'.format(self.path).encode('utf-8'))
 
-def run(server_class=HTTPServer, handler_class=S, port=int(parser_args.port)):
+def run(server_class=HTTPServer, handler_class=S):
   logging.basicConfig(level=logging.INFO)
-  server_address = (parser_args.ip, port)
+  server_address = (parser_args.ip, int(parser_args.port))
   httpd = server_class(server_address, handler_class)
   logging.info('Starting httpd...\n')
   try:
@@ -99,9 +100,5 @@ def run(server_class=HTTPServer, handler_class=S, port=int(parser_args.port)):
 
 if __name__ == '__main__':
   from sys import argv
-
-  if len(argv) == 2:
-    run(port=int(argv[1]))
-  else:
-    run()
+  run()
 
